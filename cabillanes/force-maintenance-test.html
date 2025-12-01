@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Force Maintenance Check</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .error { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .success { background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .warning { background: #fff3cd; color: #856404; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .btn { background: #007bff; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 5px; }
+        .btn:hover { background: #0056b3; }
+        .btn-danger { background: #dc3545; } .btn-danger:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 FORCE MAINTENANCE MODE TEST</h1>
+        
+        <div class="error">
+            <h3>❌ CRITICAL ISSUE DETECTED</h3>
+            <p><strong>Problem:</strong> User 'chavy' can access the system even though maintenance mode is ON!</p>
+            <p>This is a security issue - users should be blocked during maintenance.</p>
+        </div>
+        
+        <?php
+        // Check if this is running inside CodeIgniter or as standalone
+        $isCodeIgniter = function_exists('session');
+        
+        if ($isCodeIgniter) {
+            $maintenance_mode = session()->get('maintenance_mode') ?? 'off';
+            $user_role = session()->get('role') ?? 'none';
+            $username = session()->get('username') ?? 'none';
+        } else {
+            $maintenance_mode = 'unknown';
+            $user_role = 'unknown';
+            $username = 'unknown';
+        }
+        ?>
+        
+        <div class="warning">
+            <h3>📋 Current Status:</h3>
+            <p><strong>Maintenance Mode:</strong> <?= $maintenance_mode ?></p>
+            <p><strong>Current User:</strong> <?= $username ?></p>
+            <p><strong>User Role:</strong> <?= $user_role ?></p>
+            <p><strong>CodeIgniter Context:</strong> <?= $isCodeIgniter ? 'Yes' : 'No' ?></p>
+        </div>
+        
+        <div class="success">
+            <h3>🔧 IMMEDIATE FIXES:</h3>
+            <p>Try these solutions in order:</p>
+            
+            <h4>1. Clear All Sessions (Nuclear Option)</h4>
+            <a href="http://192.168.15.15/cabillanes/public/auth/logout" class="btn btn-danger">Force Logout All Users</a>
+            
+            <h4>2. Test Maintenance Again</h4>
+            <a href="http://192.168.15.15/cabillanes/public/user/dashboard" class="btn" target="_blank">Test User Dashboard</a>
+            <a href="http://192.168.15.15/cabillanes/public/electronics" class="btn" target="_blank">Test Electronics</a>
+            
+            <h4>3. Admin Controls</h4>
+            <a href="http://192.168.15.15/cabillanes/public/admin/dashboard" class="btn">Admin Dashboard</a>
+            <a href="http://192.168.15.15/cabillanes/public/admin/toggle-maintenance" class="btn">Toggle Maintenance</a>
+            
+            <h4>4. Debug Tools</h4>
+            <a href="http://192.168.15.15/cabillanes/public/maintenance-test" class="btn">Maintenance Test</a>
+            <a href="http://192.168.15.15/cabillanes/public/debug" class="btn">Debug Info</a>
+        </div>
+        
+        <div class="warning">
+            <h3>⚠️ What Should Happen:</h3>
+            <ol>
+                <li><strong>Admin enables maintenance</strong> → Toggle shows "Maintenance ON"</li>
+                <li><strong>User tries to access system</strong> → Should see maintenance page</li>
+                <li><strong>User gets logged out</strong> → Session destroyed</li>
+                <li><strong>Admin can still access</strong> → Normal functionality</li>
+            </ol>
+        </div>
+        
+        <div class="error">
+            <h3>🔍 Debugging Steps:</h3>
+            <ol>
+                <li>Open <strong>new browser/incognito window</strong></li>
+                <li>Go to: <a href="http://192.168.15.15/cabillanes/public/auth/login" target="_blank">Login Page</a></li>
+                <li>Login as: <strong>chavy / password</strong></li>
+                <li>Try to access: <a href="http://192.168.15.15/cabillanes/public/user/dashboard" target="_blank">User Dashboard</a></li>
+                <li><strong>Expected:</strong> Should see maintenance page, NOT dashboard</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-refresh every 5 seconds to show current status
+        setTimeout(function() {
+            window.location.reload();
+        }, 10000);
+    </script>
+</body>
+</html>
